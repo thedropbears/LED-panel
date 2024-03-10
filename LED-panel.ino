@@ -439,8 +439,8 @@ Frame match15_frames[match15_len] = {
 
 const int pre_match_animations_len = 16;
 Animation pre_match_animations[pre_match_animations_len] = {
-    create_animation(practice_len, practice),
     create_animation(match1_len, match1_frames),
+    create_animation(practice_len, practice),
     create_animation(match2_len, match2_frames),
     create_animation(match3_len, match3_frames),
     create_animation(match4_len, match4_frames),
@@ -518,20 +518,19 @@ void loop() {
     // RENDER
     matrix->clear();
 
-    Animation* animation = &match_animations[animation_index];
-    Frame frame = animation->frames[animation->frame_index];
-    frame.render(animation->ticks);
-    animation->ticks++;
-
-    // Go to next frame
-    if (animation->ticks >= frame.duration) {
-        animation->frame_index++;
-        animation->frame_index %= animation->frames_len;
-        animation->ticks = 0;
-    }
-
     // Draw current animation's current frame
     if (current_match_state == 0) {
+        Animation* animation = &match_animations[animation_index];
+        Frame frame = animation->frames[animation->frame_index];
+        frame.render(animation->ticks);
+        animation->ticks++;
+
+        // Go to next frame
+        if (animation->ticks >= frame.duration) {
+            animation->frame_index++;
+            animation->frame_index %= animation->frames_len;
+            animation->ticks = 0;
+        }
         // Draw current status as bars over animation
             if (high_priority_pattern == CLIMB_RETRACTED) {
             switch (pattern){
@@ -540,7 +539,7 @@ void loop() {
                     animation_index = 2;
                     break;
                 case INTAKE:
-                    render_status_flashing(MAGENTA);
+                    render_status_flashing(MAGENTA, global_ticks);
                     animation_index = 1;
                     break;
                 case IN_RANGE:
@@ -568,6 +567,18 @@ void loop() {
                     animation_index = 2;
                     break;
             }
+        }
+    } else {
+        Animation* animation = &pre_match_animations[animation_index];
+        Frame frame = animation->frames[animation->frame_index];
+        frame.render(animation->ticks);
+        animation->ticks++;
+
+        // Go to next frame
+        if (animation->ticks >= frame.duration) {
+            animation->frame_index++;
+            animation->frame_index %= animation->frames_len;
+            animation->ticks = 0;
         }
     }
     
