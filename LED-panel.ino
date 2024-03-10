@@ -137,9 +137,10 @@ void eyes_blink(int ticks) {
     }
 }
 
-// Duration=30
+// Duration=2
 void eyes_angry(int ticks) {
-  int pupil_offset;
+
+    int pupil_offset;
   if (ticks % 2 == 0) {
     pupil_offset = 1;
   } else {
@@ -147,17 +148,66 @@ void eyes_angry(int ticks) {
   }
   matrix->fillCircle(EYE_L_X, EYE_L_Y, EYE_RADIUS, WHITE);
   matrix->fillCircle(EYE_R_X, EYE_R_Y, EYE_RADIUS, WHITE);
-  matrix->fillCircle(EYE_R_X + pupil_offset, EYE_R_Y, PUPIL_RADIUS+2, BLACK);
-  matrix->fillCircle(EYE_L_X - pupil_offset, EYE_L_Y, PUPIL_RADIUS+2, BLACK);
+  matrix->fillCircle(EYE_R_X + pupil_offset, EYE_R_Y+4, PUPIL_RADIUS+2, BLACK);
+  matrix->fillCircle(EYE_L_X - pupil_offset, EYE_L_Y+4, PUPIL_RADIUS+2, BLACK);
   matrix->fillTriangle(EYE_L_X-EYE_RADIUS, 0, EYE_L_X+EYE_RADIUS, 0, EYE_L_X+EYE_RADIUS, EYE_L_Y, BLACK);
   matrix->fillTriangle(EYE_R_X-EYE_RADIUS, 0, EYE_R_X+EYE_RADIUS, 0, EYE_R_X-EYE_RADIUS, EYE_R_Y, BLACK);
+
 }
 
+// Duration=12
+void eyes_sad(int ticks) {
+  int tear_offset;
+  if ((ticks % 12) >= 6) {
+    tear_offset = 0;
+  } else {
+    tear_offset = 1;
+  }
+  matrix->fillCircle(EYE_L_X, EYE_L_Y, EYE_RADIUS, WHITE);
+  matrix->fillCircle(EYE_R_X, EYE_R_Y, EYE_RADIUS, WHITE);
+  matrix->fillCircle(EYE_R_X, EYE_R_Y+4, PUPIL_RADIUS+2, BLACK);
+  matrix->fillCircle(EYE_L_X, EYE_L_Y+4, PUPIL_RADIUS+2, BLACK);
+  matrix->fillTriangle(EYE_L_X-EYE_RADIUS, 0, EYE_L_X+EYE_RADIUS, 0, EYE_L_X-EYE_RADIUS, EYE_L_Y, BLACK);
+  matrix->fillTriangle(EYE_R_X-EYE_RADIUS, 0, EYE_R_X+EYE_RADIUS, 0, EYE_R_X+EYE_RADIUS, EYE_R_Y, BLACK);
+  matrix->fillCircle(EYE_L_X+2+tear_offset, EYE_L_Y+8, 2, CYAN);
+  matrix->fillCircle(EYE_R_X-2-tear_offset, EYE_R_Y+8, 2, CYAN);
+  matrix->fillCircle(EYE_L_X-1-tear_offset, EYE_L_Y+8, 2, CYAN);
+  matrix->fillCircle(EYE_R_X+1+tear_offset, EYE_R_Y+8, 2, CYAN);
+}
+
+// Duration=6
+void eyes_aiming(int ticks) {
+  int pupil_offset;
+  if ((ticks % 6) >= 3) {
+    pupil_offset = -1;
+  } else {
+    pupil_offset = 1;
+  }
+  matrix->fillCircle(EYE_R_X, EYE_R_Y, EYE_RADIUS, WHITE);
+  matrix->fillCircle(EYE_L_X, EYE_L_Y, EYE_RADIUS, WHITE);
+  //matrix->fillTriangle(EYE_R_X-EYE_RADIUS, 0, EYE_R_X+EYE_RADIUS, 0, EYE_R_X-EYE_RADIUS, EYE_R_Y, BLACK);
+  matrix->fillCircle(EYE_R_X+pupil_offset, EYE_R_Y-4, PUPIL_RADIUS+3, BLACK);
+  matrix->fillCircle(EYE_L_X+pupil_offset, EYE_L_Y-4, PUPIL_RADIUS+3, BLACK);
+  matrix->fillRect(0,10,WIDTH,HEIGHT,BLACK);
+
+}
+// Duration=24
+void eyes_rolling(int ticks) {
+  int time_ref = ticks % 24;
+  int radius = 5;
+  float desired_angle = time_ref * 2*3.14 / 24;
+  int x_offset = round(5 * cos(desired_angle));
+  int y_offset = round(5 * sin(desired_angle));
+  matrix->fillCircle(EYE_L_X, EYE_L_Y, EYE_RADIUS, WHITE);
+  matrix->fillCircle(EYE_R_X, EYE_R_Y, EYE_RADIUS, WHITE);
+  matrix->fillCircle(EYE_L_X+x_offset, EYE_L_Y+y_offset, PUPIL_RADIUS, BLACK);
+  matrix->fillCircle(EYE_R_X-x_offset, EYE_R_Y+y_offset, PUPIL_RADIUS, BLACK);
+}
 ///////////////////////////////////////////////////////////////////////////////
 
-int read_serial_port(u_int8_t packet) {
+int read_serial_port(uint8_t *packet) {
     if(Serial.available() > 0) {
-        Serial.readBytes(&packet, 1);  // Read the packet
+        Serial.readBytes(packet, 1);  // Read the packet
         Serial.flush();
         return 1;
     }
@@ -182,25 +232,62 @@ void render_status_flashing(int colour, int ticks) {
 
 
 // Create animation frames
-const int eye_frames_len = 4;
-Frame eye_frames[eye_frames_len] = {
+const int eye_frames_all_len = 4;
+Frame eye_frames_all[eye_frames_all_len] = {
     create_frame(&eyes_static, 30),
     create_frame(&eyes_look_leftright, 28),
     create_frame(&eyes_blink, 16),
     create_frame(&eyes_angry, 30),
 };
 
+const int eye_frames_idle_len = 8;
+Frame eye_frames_idle[eye_frames_idle_len] = {
+    create_frame(&eyes_static, 60),
+    create_frame(&eyes_look_leftright, 28),
+    create_frame(&eyes_static, 60),
+    create_frame(&eyes_static, 60),
+    create_frame(&eyes_blink, 16),
+    create_frame(&eyes_blink, 16),
+    create_frame(&eyes_static, 60),
+    create_frame(&eyes_look_leftright, 28),
+};
+
+const int eye_frames_intake_len = 1;
+Frame eye_frames_intake[eye_frames_intake_len] = {
+    create_frame(&eyes_angry, 2),
+};
+
+const int eye_frames_out_range_len = 1;
+Frame eye_frames_out_range[eye_frames_out_range_len] = {
+    create_frame(&eyes_sad, 12),
+};
+
+const int eye_frames_in_range_len = 1;
+Frame eye_frames_in_range[eye_frames_in_range_len] = {
+    create_frame(&eyes_aiming, 6),
+};
+
+const int eye_frames_extending_len = 1;
+Frame eye_frames_extending[eye_frames_extending_len] = {
+    create_frame(&eyes_rolling, 24),
+};
+
 // Create animations
 int animation_index = 0;
-const int animations_len = 1;
+const int animations_len = 6;
 Animation animations[animations_len] = {
-    create_animation(eye_frames_len, eye_frames)
+    create_animation(eye_frames_all_len, eye_frames_all),
+    create_animation(eye_frames_intake_len, eye_frames_intake),
+    create_animation(eye_frames_idle_len, eye_frames_idle),
+    create_animation(eye_frames_out_range_len, eye_frames_out_range),
+    create_animation(eye_frames_in_range_len, eye_frames_in_range),
+    create_animation(eye_frames_extending_len, eye_frames_extending),
 };
 
 uint8_t packet = 0;
 uint8_t global_ticks = 0;
 
-uint8_t pattern = INTAKE;  // Will only render this pattern if the highpriority pattern == CLIMB_RETRACTED
+uint8_t pattern = EMPTY;  // Will only render this pattern if the highpriority pattern == CLIMB_RETRACTED
 uint8_t high_priority_pattern = CLIMB_RETRACTED;
 
 
@@ -215,22 +302,29 @@ void setup() {
 
 void loop() {
     // INPUT
-    if (read_serial_port(packet)) {
-        // Set everything
-        uint8_t status_lights = (packet >> 4) & 0b111;  // Bit shift to status section of packet
-        switch (status_lights) {
-        case 4:
-            high_priority_pattern = CLIMB_EXTENDING;
-            break;
-        case 5:
-            high_priority_pattern = CLIMB_EXTENDED;
-            break;
-        case 6:
-            high_priority_pattern = CLIMB_RETRACTED;
-            break;
-        default:
-            pattern = status_lights;
-        }
+    if (read_serial_port(&packet)) {
+      // Unpack byte
+      uint8_t match_id =      (packet >> 0) & 0b1111;
+      uint8_t status_lights = (packet >> 4) & 0b111;
+      uint8_t match_state =   (packet >> 7) & 0b1;
+      Serial.print("received byte ");
+      Serial.println(packet);
+      Serial.print("Current status ");
+      Serial.println(status_lights);
+
+      switch (status_lights) {
+      case 4:
+          high_priority_pattern = CLIMB_EXTENDING;
+          break;
+      case 5:
+          high_priority_pattern = CLIMB_EXTENDED;
+          break;
+      case 6:
+          high_priority_pattern = CLIMB_RETRACTED;
+          break;
+      default:
+          pattern = status_lights;
+      }
     }
 
     // UPDATE
@@ -257,18 +351,23 @@ void loop() {
         switch (pattern){
             case EMPTY:
                 render_status(WHITE);
+                animation_index = 2;
                 break;
             case INTAKE:
                 render_status(MAGENTA);
+                animation_index = 1;
                 break;
             case IN_RANGE:
                 render_status(GREEN);
+                animation_index = 4;
                 break;
             case NOT_IN_RANGE:
                 render_status(RED);
+                animation_index = 3;
                 break;
             case OFF:
                 render_status(BLACK);
+                animation_index = 2;
                 break;
         }
     }
@@ -276,9 +375,11 @@ void loop() {
         switch (high_priority_pattern){
             case CLIMB_EXTENDING:
                 render_status_flashing(YELLOW, global_ticks);
+                animation_index = 5;
                 break;
             case CLIMB_EXTENDED:
                 render_status(YELLOW);
+                animation_index = 2;
                 break;
         }
     }
