@@ -5,22 +5,21 @@
 
 #include "dblogo.h"
 
-
-// Colour constants (Our LED strips use 16bit GRB)
-#define BRIGHTNESS 32
-#define BLACK    0x0000
-#define BLUE     0x001F
-#define RED      0x07E0
-#define GREEN    0xF800
-#define CYAN     0xF81F
-#define MAGENTA  0x07FF
-#define YELLOW   0xFFE0 
-#define WHITE    0xFFFF
-
 // LED display constants
 #define PIN 22
 #define WIDTH 71
 #define HEIGHT 16
+
+// Colour constants (Our LED strips use 16bit GRB)
+#define BRIGHTNESS 32
+#define BLACK    matrix->Color(0, 0, 0)
+#define BLUE     matrix->Color(0, 0, 255)
+#define RED      matrix->Color(255, 0, 0)
+#define GREEN    matrix->Color(0, 255, 0)
+#define CYAN     matrix->Color(0, 255, 255)
+#define MAGENTA  matrix->Color(255, 0, 255)
+#define YELLOW   matrix->Color(255, 255, 0)
+#define WHITE    matrix->Color(255, 255, 255)
 
 // Animation constants
 #define EYE_L_X 20
@@ -40,6 +39,11 @@
 #define STATUS_WIDTH 8
 #define FLASH_SPEED 4  // ticks
 
+// Instantiating the LED display
+Adafruit_NeoMatrix *matrix = new Adafruit_NeoMatrix(
+    WIDTH, HEIGHT, PIN,
+    NEO_MATRIX_TOP + NEO_MATRIX_LEFT + NEO_MATRIX_ROWS + NEO_MATRIX_ZIGZAG,
+    NEO_RGB + NEO_KHZ800);
 
 enum StatusPattern {
   EMPTY,
@@ -51,12 +55,6 @@ enum StatusPattern {
   CLIMB_RETRACTED,
   OFF
 };
-
-// Instantiating the LED display
-Adafruit_NeoMatrix *matrix = new Adafruit_NeoMatrix(
-    WIDTH, HEIGHT, PIN,
-    NEO_MATRIX_TOP + NEO_MATRIX_LEFT + NEO_MATRIX_ROWS + NEO_MATRIX_ZIGZAG,
-    NEO_GRB + NEO_KHZ800);
 
 // Struct definitions
 typedef void (*Frame_Ptr)(int);
