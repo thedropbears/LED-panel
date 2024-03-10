@@ -299,16 +299,22 @@ void setup() {
     Serial.begin(9600);
 }
 
+uint8_t status_lights;
+uint8_t match_state;
+uint8_t match_id;
 
 void loop() {
     // INPUT
     if (read_serial_port(&packet)) {
       // Unpack byte
-      uint8_t match_id =      (packet >> 0) & 0b1111;
-      uint8_t status_lights = (packet >> 4) & 0b111;
-      uint8_t match_state =   (packet >> 7) & 0b1;
+      uint8_t payload = (packet >> 0) & 0b111111;
+      match_state =     (packet >> 6) & 0b11;
+
+      status_lights =   (payload >> 0) & 0b111;
+      match_id =        (payload >> 0) & 0b1111;
+
       Serial.print("received byte ");
-      Serial.println(packet);
+      Serial.println(payload);
       Serial.print("Current status ");
       Serial.println(status_lights);
 
