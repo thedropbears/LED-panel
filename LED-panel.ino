@@ -540,7 +540,7 @@ void loop() {
                     animation_index = 2;
                     break;
                 case INTAKE:
-                    render_status(MAGENTA);
+                    render_status_flashing(MAGENTA);
                     animation_index = 1;
                     break;
                 case IN_RANGE:
