@@ -137,6 +137,22 @@ void eyes_blink(int ticks) {
     }
 }
 
+// Duration=30
+void eyes_angry(int ticks) {
+  int pupil_offset;
+  if (ticks % 2 == 0) {
+    pupil_offset = 1;
+  } else {
+    pupil_offset = 0;
+  }
+  matrix->fillCircle(EYE_L_X, EYE_L_Y, EYE_RADIUS, WHITE);
+  matrix->fillCircle(EYE_R_X, EYE_R_Y, EYE_RADIUS, WHITE);
+  matrix->fillCircle(EYE_R_X + pupil_offset, EYE_R_Y, PUPIL_RADIUS+2, BLACK);
+  matrix->fillCircle(EYE_L_X - pupil_offset, EYE_L_Y, PUPIL_RADIUS+2, BLACK);
+  matrix->fillTriangle(EYE_L_X-EYE_RADIUS, 0, EYE_L_X+EYE_RADIUS, 0, EYE_L_X+EYE_RADIUS, EYE_L_Y, BLACK);
+  matrix->fillTriangle(EYE_R_X-EYE_RADIUS, 0, EYE_R_X+EYE_RADIUS, 0, EYE_R_X-EYE_RADIUS, EYE_R_Y, BLACK);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 int read_serial_port(u_int8_t packet) {
@@ -166,11 +182,12 @@ void render_status_flashing(int colour, int ticks) {
 
 
 // Create animation frames
-const int eye_frames_len = 3;
+const int eye_frames_len = 4;
 Frame eye_frames[eye_frames_len] = {
     create_frame(&eyes_static, 30),
     create_frame(&eyes_look_leftright, 28),
     create_frame(&eyes_blink, 16),
+    create_frame(&eyes_angry, 30),
 };
 
 // Create animations
