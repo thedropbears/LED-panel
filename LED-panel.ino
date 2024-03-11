@@ -39,6 +39,9 @@
 #define STATUS_WIDTH 8
 #define FLASH_SPEED 4  // ticks
 
+// Text constants
+#define SCROLL_LENGTH WIDTH*4
+
 // Instantiating the LED display
 Adafruit_NeoMatrix *matrix = new Adafruit_NeoMatrix(
     WIDTH, HEIGHT, PIN,
@@ -54,6 +57,12 @@ enum StatusPattern {
   CLIMB_EXTENDED,
   CLIMB_RETRACTED,
   OFF
+};
+
+enum MatchState {
+    PRE_MATCH,
+    DURING,
+    POST_MATCH
 };
 
 // Struct definitions
@@ -285,75 +294,86 @@ Animation match_animations[match_animations_len] = {
 // PRE_MATCH ANIMATIONS ///////////////////////////////////////////////////////////
 
 void team_logo(int ticks) {
-    matrix->drawRGBBitmap(0, 0, (const uint16_t*)dblogo, 39, 16);
-    matrix->setCursor(40, 0);
-    matrix->println("DROP");
-    matrix->setCursor(40, 9);
-    matrix->println("BEARS");
+    matrix->drawRGBBitmap(0, 0, (const uint16_t*)dblogo, 10, 16);
 }
 
 void scroll_text(int ticks, String text) {
-    matrix->setCursor(WIDTH - ticks, HEIGHT);
+    matrix->setCursor(WIDTH - ticks, 0);
     matrix->println(text);
 }
 
 void match1(int ticks) {
+    matrix->setTextColor(BLUE, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match2(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match3(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match4(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match5(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match6(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match7(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match8(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match9(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match10(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match11(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match12(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match13(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match14(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
 void match15(int ticks) {
+    matrix->setTextColor(RED, BLACK);
     scroll_text(ticks, "4774: The Drop Bears        ????: Unknown Team        ????: Unknown Team");
 }
 
@@ -364,77 +384,77 @@ Frame practice[practice_len] = {
 
 const int match1_len = 1;
 Frame match1_frames[match1_len] = {
-    create_frame(&match1, 100)
+    create_frame(&match1, SCROLL_LENGTH)
 };
 
 const int match2_len = 1;
 Frame match2_frames[match2_len] = {
-    create_frame(&match2, 100)
+    create_frame(&match2, SCROLL_LENGTH)
 };
 
 const int match3_len = 1;
 Frame match3_frames[match3_len] = {
-    create_frame(&match3, 100)
+    create_frame(&match3, SCROLL_LENGTH)
 };
 
 const int match4_len = 1;
 Frame match4_frames[match4_len] = {
-    create_frame(&match4, 100)
+    create_frame(&match4, SCROLL_LENGTH)
 };
 
 const int match5_len = 1;
 Frame match5_frames[match5_len] = {
-    create_frame(&match5, 100)
+    create_frame(&match5, SCROLL_LENGTH)
 };
 
 const int match6_len = 1;
 Frame match6_frames[match6_len] = {
-    create_frame(&match6, 100)
+    create_frame(&match6, SCROLL_LENGTH)
 };
 
 const int match7_len = 1;
 Frame match7_frames[match7_len] = {
-    create_frame(&match7, 100)
+    create_frame(&match7, SCROLL_LENGTH)
 };
 
 const int match8_len = 1;
 Frame match8_frames[match8_len] = {
-    create_frame(&match8, 100)
+    create_frame(&match8, SCROLL_LENGTH)
 };
 
 const int match9_len = 1;
 Frame match9_frames[match9_len] = {
-    create_frame(&match9, 100)
+    create_frame(&match9, SCROLL_LENGTH)
 };
 
 const int match10_len = 1;
 Frame match10_frames[match10_len] = {
-    create_frame(&match10, 100)
+    create_frame(&match10, SCROLL_LENGTH)
 };
 
 const int match11_len = 1;
 Frame match11_frames[match11_len] = {
-    create_frame(&match11, 100)
+    create_frame(&match11, SCROLL_LENGTH)
 };
 
 const int match12_len = 1;
 Frame match12_frames[match12_len] = {
-    create_frame(&match12, 100)
+    create_frame(&match12, SCROLL_LENGTH)
 };
 
 const int match13_len = 1;
 Frame match13_frames[match13_len] = {
-    create_frame(&match13, 100)
+    create_frame(&match13, SCROLL_LENGTH)
 };
 
 const int match14_len = 1;
 Frame match14_frames[match14_len] = {
-    create_frame(&match14, 100)
+    create_frame(&match14, SCROLL_LENGTH)
 };
 
 const int match15_len = 1;
 Frame match15_frames[match15_len] = {
-    create_frame(&match15, 100)
+    create_frame(&match15, SCROLL_LENGTH)
 };
 
 const int pre_match_animations_len = 16;
@@ -455,6 +475,21 @@ Animation pre_match_animations[pre_match_animations_len] = {
     create_animation(match13_len, match13_frames),
     create_animation(match14_len, match14_frames),
     create_animation(match15_len, match15_frames)
+};
+
+
+void celebration(int ticks) {
+    scroll_text(ticks, "GG");
+}
+
+const int celebration_len = 1;
+Frame celebration_frames[celebration_len] = {
+    create_frame(&celebration, WIDTH)
+};
+
+const int post_match_animations_len = 1;
+Animation post_match_animations[post_match_animations_len] = {
+    create_animation(celebration_len, celebration_frames)
 };
 
 uint8_t packet = 0;
@@ -519,7 +554,7 @@ void loop() {
     matrix->clear();
 
     // Draw current animation's current frame
-    if (current_match_state == 0) {
+    if (current_match_state == DURING) {
         Animation* animation = &match_animations[animation_index];
         Frame frame = animation->frames[animation->frame_index];
         frame.render(animation->ticks);
@@ -568,8 +603,21 @@ void loop() {
                     break;
             }
         }
-    } else {
+    } else if (current_match_state == PRE_MATCH){
+        animation_index = match_id;
         Animation* animation = &pre_match_animations[animation_index];
+        Frame frame = animation->frames[animation->frame_index];
+        frame.render(animation->ticks);
+        animation->ticks++;
+
+        // Go to next frame
+        if (animation->ticks >= frame.duration) {
+            animation->frame_index++;
+            animation->frame_index %= animation->frames_len;
+            animation->ticks = 0;
+        }
+    } else if (current_match_state == POST_MATCH) {
+        Animation* animation = &post_match_animations[animation_index];
         Frame frame = animation->frames[animation->frame_index];
         frame.render(animation->ticks);
         animation->ticks++;
